@@ -1,0 +1,18 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn build && http-server ./out/",
+    "build": "yarn build:js && cp ./public/index.html ./out/",
+    "build:js": "esbuild index.tsx --bundle --minify --target=chrome58,firefox57,safari11,edge16 --outfile=./out/bundle.js --define:process.env.NODE_ENV=\\\"production\\\""
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "esbuild": "^0.8.51",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-number-format": "^4.4.4"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
