@@ -22,6 +22,7 @@ const useStyles = makeStyles(() => ({
   },
   footer: {
     margin: 14,
+    textAlign: 'center',
   },
 }));
 
@@ -43,6 +44,7 @@ function Skeleton(props) {
         </Paper>
         {props.children}
         <Typography variant='caption' component='p' className={classes.footer}>
+          Aplikasi ini mungkin tidak akurat dan tidak diperuntukan sebagai anjuran hukum<br />
           2021 - warisin - <Link href='https://github.com/asendia/severance-pay'>source code</Link>
         </Typography>
       </Grid>

@@ -1,4 +1,4 @@
-# severance-pay
+# severance-pay [![Netlify Status](https://api.netlify.com/api/v1/badges/ed826472-bd14-4f35-a9ec-9a24034b1f52/deploy-status)](https://app.netlify.com/sites/pesangon/deploys)
 Simple web app to calculate Indonesian severance pay. Publicly accessible in [warisin.com/pesangon](https://warisin.com/pesangon) in Bahasa Indonesia
 
 ## Disclaimer
