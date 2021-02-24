@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Link from '@material-ui/core/Link';
+import Checkbox from '@material-ui/core/Checkbox';
 import CurrencyInput from './CurrencyInput';
 import SeveranceDescription from './SeveranceDescription';
+import SeveranceWhatIf from './SeveranceWhatIf';
 import { dateToString, getDateAddYear } from './dateUtils';
-import { calculateSeveranceMultiplier, SeveranceFormData, SeveranceMultiplier } from './severanceUtils';
+import { calculateSeveranceData, SeveranceFormData, SeveranceData } from './severanceUtils';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
@@ -21,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  checkboxContainer: {
+    marginBottom: 8,
+  },
   submitButton: {
     marginTop: theme.spacing(3),
   },
@@ -32,9 +41,11 @@ function Form() {
     startWorkDate: getDateAddYear(-2),
     stopWorkDate: new Date(),
     salary: 0,
+    specialReason: true,
   });
-  const [severanceMultiplier, setSeveranceMultiplier] = useState<SeveranceMultiplier>(
-    calculateSeveranceMultiplier(severanceFormData)
+  const [severanceFormDataFinal, setSeveranceFormDataFinal] = useState<SeveranceFormData>(severanceFormData);
+  const [severanceData, setSeveranceData] = useState<SeveranceData>(
+    calculateSeveranceData(severanceFormData)
   );
   function handleStartWorkDateChange(e) {
     setSeveranceFormData({ ...severanceFormData, startWorkDate: new Date(e.target.value) });
@@ -42,12 +53,16 @@ function Form() {
   function handleStopWorkDateChange(e) {
     setSeveranceFormData({ ...severanceFormData, stopWorkDate: new Date(e.target.value) });
   }
+  function handleSpecialReasonChange(e) {
+    setSeveranceFormData({ ...severanceFormData, specialReason: e.target.checked })
+  }
   function handleSalaryChange(e) {
     setSeveranceFormData({ ...severanceFormData, salary: e.target.value });
   }
   function handleFormSubmit(e) {
     e.preventDefault();
-    setSeveranceMultiplier(calculateSeveranceMultiplier(severanceFormData));
+    setSeveranceData(calculateSeveranceData(severanceFormData));
+    setSeveranceFormDataFinal(severanceFormData);
   }
   return (
     <>
@@ -76,6 +91,20 @@ function Form() {
               }}
               onChange={handleStopWorkDateChange}
             />
+            <FormControl className={classes.checkboxContainer}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={severanceFormData.specialReason}
+                    onChange={handleSpecialReasonChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                    color='primary'
+                  />
+                }
+                label="Alasan khusus"
+              />
+              <FormHelperText><Link href='/pesangon/special-case.html' target='blank'>apa itu alasan khusus?</Link></FormHelperText>
+            </FormControl>
             <TextField
               label='Upah Bulanan'
               value={severanceFormData.salary.toString()}
@@ -92,9 +121,15 @@ function Form() {
         </Card>
       </form>
       <SeveranceDescription
-        severanceMultiplier={severanceMultiplier}
-        severanceFormData={severanceFormData}
+        severanceData={severanceData}
+        severanceFormData={severanceFormDataFinal}
       />
+      { severanceData.effectiveLaw.name === 'UU No 11 Tahun 2020' && 
+      <SeveranceWhatIf
+        severanceData={severanceData}
+        severanceFormData={severanceFormDataFinal}
+      /> 
+      }
     </>
   );
 }

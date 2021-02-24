@@ -4,14 +4,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { SeveranceData, SeveranceFormData, WORK_WEEKS_IN_A_YEAR,
-  getWorkingDurationMilis, WORK_MILIS_IN_A_YEAR } from './severanceUtils';
+import { calculateSeveranceData, WORK_WEEKS_IN_A_YEAR, getWorkingDurationMilis, WORK_MILIS_IN_A_YEAR, SeveranceFormData, SeveranceData } from './severanceUtils';
+import { SeveranceDescriptionProps } from './SeveranceDescription';
 import { makeStyles } from '@material-ui/core/styles';
-
-export type SeveranceDescriptionProps = {
-  severanceData: SeveranceData;
-  severanceFormData: SeveranceFormData;
-}
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -30,26 +25,31 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function SeveranceDescription(props: SeveranceDescriptionProps) {
+function SeveranceWhatIf(props: SeveranceDescriptionProps) {
   const classes = useStyles();
-  const { salary } = props.severanceFormData;
-  const baseMultiplier = props.severanceData.baseMultiplier * (props.severanceFormData.specialReason ? props.severanceData.effectiveLaw.specialMultiplier : 1);
-  const severanceMultiplier = baseMultiplier + props.severanceData.rewardMultiplier;
+  const stopWorkDate = new Date('2021-02-01');
+  const severanceFormData: SeveranceFormData = {
+    ...props.severanceFormData,
+    stopWorkDate,
+  };
+  const severanceData: SeveranceData = calculateSeveranceData(severanceFormData);
+  const { salary } = severanceFormData;
+  const baseMultiplier = severanceData.baseMultiplier * (severanceFormData.specialReason ? severanceData.effectiveLaw.specialMultiplier : 1);
+  const severanceMultiplier = baseMultiplier + severanceData.rewardMultiplier;
   const severance = severanceMultiplier * salary;
-  const workDurationYear = (getWorkingDurationMilis(props.severanceFormData) / WORK_MILIS_IN_A_YEAR).toLocaleString('id-ID', { maximumFractionDigits: 1 });
+  const workDurationYear = (getWorkingDurationMilis(severanceFormData) / WORK_MILIS_IN_A_YEAR).toLocaleString('id-ID', { maximumFractionDigits: 1 });
   return (
     <Card
       className={classes.container}
     >
       <CardContent>
-        <Typography className={classes.title} color='textSecondary' gutterBottom>
-          Berdasarkan
-        </Typography>
-        <Typography variant='h5'color='textSecondary'>
-          {props.severanceData.effectiveLaw.name}
+        <Typography variant='h3'>
+          Kalau
         </Typography>
         <Typography className={classes.title} color='textSecondary' gutterBottom>
-          Perkiraan pesangon anda sebesar
+          anda diberhentikan tanggal<br />
+          1 Februari 2021 (sebelum ciptaker)<br />
+          pesangon anda bisa berjumlah
         </Typography>
         { salary > 0 && (
           <>
@@ -65,17 +65,7 @@ function SeveranceDescription(props: SeveranceDescriptionProps) {
           {severanceMultiplier + 'x upah bulanan'}
         </Typography>
         <Typography variant='body2' component='p' className={classes.workDurationDesc}>
-          Dengan asumsi 1 tahun kerja
-          <br />
-          adalah {WORK_WEEKS_IN_A_YEAR} minggu,
-          <br />
-          anda telah bekerja selama
-        </Typography>
-        <Typography variant='h6' color='textSecondary'>
-          {workDurationYear} tahun
-        </Typography>
-        <Typography variant='body2' component='p' className={classes.workDurationDesc}>
-          Sehingga berhak mendapatkan
+          Dengan rincian
           <br />
           uang pesangon sebesar
         </Typography>
@@ -88,14 +78,13 @@ function SeveranceDescription(props: SeveranceDescriptionProps) {
           masa kerja sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>
-          {props.severanceData.rewardMultiplier + 'x upah bulanan'}
+          {severanceData.rewardMultiplier + 'x upah bulanan'}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size='small' target='_blank' href='https://www.hukumonline.com/klinik/detail/ulasan/lt515b7ec90fe0c/cara-menghitung-pesangon-berdasarkan-alasan-phk/'>Pelajari</Button>
-      </CardActions>
     </Card>
   );
 }
 
-export default SeveranceDescription;
+export default SeveranceWhatIf;
+
+  

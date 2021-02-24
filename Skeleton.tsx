@@ -3,8 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
+  root: {
+    paddingBottom: 20,
+  },
   title: {
     minWidth: 275,
     paddingTop: 7,
@@ -16,6 +20,9 @@ const useStyles = makeStyles(() => ({
   text: {
     marginLeft: 14,
   },
+  footer: {
+    margin: 14,
+  },
 }));
 
 function Skeleton(props) {
@@ -23,6 +30,7 @@ function Skeleton(props) {
   return (
     <>
       <Grid
+        className={classes.root}
         container
         direction='column'
         justify='center'
@@ -34,6 +42,9 @@ function Skeleton(props) {
           </Typography>
         </Paper>
         {props.children}
+        <Typography variant='caption' component='p' className={classes.footer}>
+          2021 - warisin - <Link href='https://github.com/asendia/severance-pay'>source code</Link>
+        </Typography>
       </Grid>
     </>
   )

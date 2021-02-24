@@ -1,9 +1,10 @@
 {
   "license": "MIT",
   "scripts": {
-    "start": "yarn build && http-server ./out/",
-    "build": "yarn build:js && cp ./public/index.html ./out/pesangon/",
-    "build:js": "esbuild index.tsx --bundle --minify --target=chrome58,firefox57,safari11,edge16 --outfile=./out/pesangon/bundle.js --define:process.env.NODE_ENV=\\\"production\\\""
+    "dev": "yarn build:html && node serve.js",
+    "build": "NODE_ENV=production yarn build:js && yarn build:html",
+    "build:html": "cp ./public/*.html ./out/pesangon/",
+    "build:js": "node build.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
