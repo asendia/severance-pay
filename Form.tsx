@@ -33,10 +33,9 @@ function Form() {
     stopWorkDate: new Date(),
     salary: 0,
   });
-  const [severanceMultiplier, setSeveranceMultiplier] = useState<SeveranceMultiplier>({
-    baseMultiplier: 0,
-    rewardMultiplier: 0,
-  });
+  const [severanceMultiplier, setSeveranceMultiplier] = useState<SeveranceMultiplier>(
+    calculateSeveranceMultiplier(severanceFormData)
+  );
   function handleStartWorkDateChange(e) {
     setSeveranceFormData({ ...severanceFormData, startWorkDate: new Date(e.target.value) });
   }
