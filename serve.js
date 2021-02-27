@@ -1,13 +1,15 @@
 const esbuild = require('esbuild');
 const http = require('http');
 
-const environment = process.env.NODE_ENV || 'development'
+const environment = 'development';
+
 esbuild.serve({
   servedir: './out',
 }, {
   entryPoints: ['index.tsx'],
   bundle: true,
-  minify: environment === 'production',
+  minify: false,
+  sourcemap: true,
   target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
   outdir: './out/pesangon/',
   define: {
@@ -48,4 +50,7 @@ esbuild.serve({
     // Forward the body of the request to esbuild
     req.pipe(proxyReq, { end: true });
   }).listen(3000);
+}).catch((err) => {
+  console.error(err);
+  process.exit(1);
 });
