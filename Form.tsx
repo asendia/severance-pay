@@ -10,7 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CurrencyInput from './CurrencyInput';
 import SeveranceDescription from './SeveranceDescription';
 import SeveranceWhatIf from './SeveranceWhatIf';
-import { dateToString, getDateAddYear } from './dateUtils';
+import { dateToString, stringToDate, isValidDate, getDateAddYear } from './dateUtils';
 import { calculateSeveranceData, SeveranceFormData, SeveranceData } from './severanceUtils';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -43,27 +43,37 @@ function Form() {
     salary: 0,
     specialReason: true,
   });
-  const [severanceFormDataFinal, setSeveranceFormDataFinal] = useState<SeveranceFormData>(severanceFormData);
+  const [startWorkDate, setStartWorkDate] = useState(dateToString(severanceFormData.startWorkDate));
+  const [stopWorkDate, setStopWorkDate] = useState(dateToString(severanceFormData.stopWorkDate));
+  const [specialReason, setSpecialReason] = useState(severanceFormData.specialReason);
+  const [salary, setSalary] = useState(severanceFormData.salary);
   const [severanceData, setSeveranceData] = useState<SeveranceData>(
     calculateSeveranceData(severanceFormData)
   );
   function handleStartWorkDateChange(e) {
-    setSeveranceFormData({ ...severanceFormData, startWorkDate: new Date(e.target.value) });
+    setStartWorkDate(e.target.value);
   }
   function handleStopWorkDateChange(e) {
-    setSeveranceFormData({ ...severanceFormData, stopWorkDate: new Date(e.target.value) });
+    setStopWorkDate(e.target.value);
   }
   function handleSpecialReasonChange(e) {
-    setSeveranceFormData({ ...severanceFormData, specialReason: e.target.checked })
+    setSpecialReason(e.target.checked);
   }
   function handleSalaryChange(e) {
-    setSeveranceFormData({ ...severanceFormData, salary: e.target.value });
+    setSalary(e.target.value);
   }
   function handleFormSubmit(e) {
     e.preventDefault();
-    setSeveranceData(calculateSeveranceData(severanceFormData));
-    setSeveranceFormDataFinal(severanceFormData);
+    const start = stringToDate(startWorkDate);
+    const stop = stringToDate(stopWorkDate);
+    if (isValidDate(start) && isValidDate(stop)) {
+      const formData = {startWorkDate: start, stopWorkDate: stop, specialReason, salary };
+      setSeveranceFormData(formData)
+      setSeveranceData(calculateSeveranceData(formData));
+    }
   }
+  const isValidStartWorkDate = isValidDate(stringToDate(startWorkDate));
+  const isValidStopWorkDate = isValidDate(stringToDate(stopWorkDate));
   return (
     <>
       <form onSubmit={handleFormSubmit}>
@@ -73,29 +83,33 @@ function Form() {
               id='startWorkingDate'
               label='Tanggal Bergabung'
               type='date'
-              value={dateToString(severanceFormData.startWorkDate)}
+              value={startWorkDate}
               className={classes.textField}
               InputLabelProps={{
                 shrink: true,
               }}
+              error={!isValidStartWorkDate}
+              helperText={!isValidStartWorkDate && 'Format tanggal tidak valid'}
               onChange={handleStartWorkDateChange}
             />
             <TextField
               id='stopWorkingDate'
               label='Tanggal Diberhentikan'
               type='date'
-              value={dateToString(severanceFormData.stopWorkDate)}
+              value={stopWorkDate}
               className={classes.textField}
               InputLabelProps={{
                 shrink: true,
               }}
+              error={!isValidStopWorkDate}
+              helperText={!isValidStopWorkDate && 'Format tanggal tidak valid'}
               onChange={handleStopWorkDateChange}
             />
             <FormControl className={classes.checkboxContainer}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={severanceFormData.specialReason}
+                    checked={specialReason}
                     onChange={handleSpecialReasonChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                     color='primary'
@@ -107,7 +121,7 @@ function Form() {
             </FormControl>
             <TextField
               label='Upah Bulanan'
-              value={severanceFormData.salary.toString()}
+              value={salary.toString()}
               onChange={handleSalaryChange}
               name='baseSalary'
               id='baseSalary'
@@ -122,12 +136,12 @@ function Form() {
       </form>
       <SeveranceDescription
         severanceData={severanceData}
-        severanceFormData={severanceFormDataFinal}
+        severanceFormData={severanceFormData}
       />
       { severanceData.effectiveLaw.name === 'UU No 11 Tahun 2020' && 
       <SeveranceWhatIf
         severanceData={severanceData}
-        severanceFormData={severanceFormDataFinal}
+        severanceFormData={severanceFormData}
       /> 
       }
     </>
