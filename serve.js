@@ -1,24 +1,36 @@
 const esbuild = require('esbuild');
 const http = require('http');
+const buildHtml = require('./buildHtml');
 
 const environment = 'development';
 
-esbuild.serve({
-  servedir: './out',
-}, {
+const buildOptions = {
   entryPoints: ['index.tsx'],
   bundle: true,
   minify: false,
   sourcemap: true,
-  target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
+  target: ['es2020', 'chrome58', 'firefox57', 'safari11'],
   outdir: './out/pesangon/',
+  entryNames: '[dir]/[name]',
   define: {
     'process.env.NODE_ENV': "\"" + environment + "\"",
   },
-}).then((result) => {
+};
+
+esbuild.serve({
+  servedir: './out',
+}, buildOptions).then((result) => {
   if (environment === 'production') {
     return;
   }
+  const metafile = { outputs: {} };
+  buildOptions.entryPoints.forEach((entryPoint) => {
+    // Hardcoded
+    metafile.outputs[buildOptions.outdir.replace('./', '') + entryPoint.replace('.tsx', '.js')] = {
+      entryPoint: entryPoint,
+    };
+  });
+  buildHtml(metafile);
   // The result tells us where esbuild's local server is
   const {host, port} = result
 
