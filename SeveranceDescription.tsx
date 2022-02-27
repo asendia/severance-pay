@@ -16,7 +16,7 @@ export type SeveranceDescriptionProps = {
 const useStyles = makeStyles(() => ({
   container: {
     marginTop: 14,
-    minWidth: 275,
+    width: '100%',
   },
   title: {
     fontSize: 14,
@@ -66,9 +66,7 @@ function SeveranceDescription(props: SeveranceDescriptionProps) {
         </Typography>
         <Typography variant='body2' component='p' className={classes.workDurationDesc}>
           Dengan asumsi 1 tahun kerja
-          <br />
           adalah {WORK_WEEKS_IN_A_YEAR} minggu,
-          <br />
           anda telah bekerja selama
         </Typography>
         <Typography variant='h6' color='textSecondary'>
@@ -76,7 +74,6 @@ function SeveranceDescription(props: SeveranceDescriptionProps) {
         </Typography>
         <Typography variant='body2' component='p' className={classes.workDurationDesc}>
           Sehingga berhak mendapatkan
-          <br />
           uang pesangon sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>
@@ -84,7 +81,6 @@ function SeveranceDescription(props: SeveranceDescriptionProps) {
         </Typography>
         <Typography variant='body2' component='p' className={classes.workDurationDesc}>
           Dan uang penghargaan
-          <br />
           masa kerja sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>

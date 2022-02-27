@@ -5,12 +5,17 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: 20,
+    width: 420,
+    margin: 'auto',
+    [theme.breakpoints.down(450)]: {
+      width: '100%',
+    },
   },
   title: {
-    minWidth: 275,
+    width: '100%',
     paddingTop: 7,
     paddingBottom: 7,
     marginTop: 9,

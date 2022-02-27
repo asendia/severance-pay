@@ -10,14 +10,28 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CurrencyInput from './CurrencyInput';
 import SeveranceDescription from './SeveranceDescription';
 import SeveranceWhatIf from './SeveranceWhatIf';
-import { dateToString, stringToDate, isValidDate, getDateAddYear } from './dateUtils';
-import { calculateSeveranceData, SeveranceFormData, SeveranceData } from './severanceUtils';
+import {
+  dateToString,
+  stringToDate,
+  isValidDate,
+  getDateAddYear,
+} from './dateUtils';
+import {
+  calculateSeveranceData,
+  SeveranceFormData,
+  SeveranceData,
+} from './severanceUtils';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    minWidth: 275,
+  '@global': {
+    'input::-webkit-date-and-time-value': {
+      textAlign: 'left',
+    },
+  },
+  form: {
+    width: '100%',
   },
   content: {
     display: 'flex',
@@ -37,15 +51,23 @@ const useStyles = makeStyles((theme) => ({
 
 function Form() {
   const classes = useStyles();
-  const [severanceFormData, setSeveranceFormData] = useState<SeveranceFormData>({
-    startWorkDate: getDateAddYear(-2),
-    stopWorkDate: new Date(),
-    salary: 0,
-    specialReason: true,
-  });
-  const [startWorkDate, setStartWorkDate] = useState(dateToString(severanceFormData.startWorkDate));
-  const [stopWorkDate, setStopWorkDate] = useState(dateToString(severanceFormData.stopWorkDate));
-  const [specialReason, setSpecialReason] = useState(severanceFormData.specialReason);
+  const [severanceFormData, setSeveranceFormData] = useState<SeveranceFormData>(
+    {
+      startWorkDate: getDateAddYear(-2),
+      stopWorkDate: new Date(),
+      salary: 0,
+      specialReason: true,
+    }
+  );
+  const [startWorkDate, setStartWorkDate] = useState(
+    dateToString(severanceFormData.startWorkDate)
+  );
+  const [stopWorkDate, setStopWorkDate] = useState(
+    dateToString(severanceFormData.stopWorkDate)
+  );
+  const [specialReason, setSpecialReason] = useState(
+    severanceFormData.specialReason
+  );
   const [salary, setSalary] = useState(severanceFormData.salary);
   const [severanceData, setSeveranceData] = useState<SeveranceData>(
     calculateSeveranceData(severanceFormData)
@@ -67,8 +89,13 @@ function Form() {
     const start = stringToDate(startWorkDate);
     const stop = stringToDate(stopWorkDate);
     if (isValidDate(start) && isValidDate(stop)) {
-      const formData = {startWorkDate: start, stopWorkDate: stop, specialReason, salary };
-      setSeveranceFormData(formData)
+      const formData = {
+        startWorkDate: start,
+        stopWorkDate: stop,
+        specialReason,
+        salary,
+      };
+      setSeveranceFormData(formData);
       setSeveranceData(calculateSeveranceData(formData));
     }
   }
@@ -76,8 +103,8 @@ function Form() {
   const isValidStopWorkDate = isValidDate(stringToDate(stopWorkDate));
   return (
     <>
-      <form onSubmit={handleFormSubmit}>
-        <Card className={classes.container}>
+      <form onSubmit={handleFormSubmit} className={classes.form}>
+        <Card>
           <CardContent className={classes.content}>
             <TextField
               id='startWorkingDate'
@@ -115,9 +142,13 @@ function Form() {
                     color='primary'
                   />
                 }
-                label="Alasan khusus"
+                label='Alasan khusus'
               />
-              <FormHelperText><Link href='/pesangon/special-case.html' target='blank'>apa itu alasan khusus?</Link></FormHelperText>
+              <FormHelperText style={{ marginTop: '-7px' }}>
+                <Link href='/pesangon/special-case.html' target='blank'>
+                  Apa itu alasan khusus?
+                </Link>
+              </FormHelperText>
             </FormControl>
             <TextField
               label='Upah Bulanan'
@@ -130,7 +161,14 @@ function Form() {
                 inputComponent: CurrencyInput as any,
               }}
             />
-          <Button onClick={handleFormSubmit} className={classes.submitButton}>Hitung Pesangon</Button>
+            <Button
+              onClick={handleFormSubmit}
+              className={classes.submitButton}
+              variant={'outlined'}
+              color={'primary'}
+            >
+              Hitung Pesangon
+            </Button>
           </CardContent>
         </Card>
       </form>
@@ -138,12 +176,12 @@ function Form() {
         severanceData={severanceData}
         severanceFormData={severanceFormData}
       />
-      { severanceData.effectiveLaw.name === 'UU No 11 Tahun 2020' && 
-      <SeveranceWhatIf
-        severanceData={severanceData}
-        severanceFormData={severanceFormData}
-      /> 
-      }
+      {severanceData.effectiveLaw.name === 'UU No 11 Tahun 2020' && (
+        <SeveranceWhatIf
+          severanceData={severanceData}
+          severanceFormData={severanceFormData}
+        />
+      )}
     </>
   );
 }

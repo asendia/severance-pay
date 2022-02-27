@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
   container: {
     marginTop: 14,
-    minWidth: 275,
+    width: '100%',
   },
   title: {
     fontSize: 14,
@@ -47,8 +47,8 @@ function SeveranceWhatIf(props: SeveranceDescriptionProps) {
           Kalau
         </Typography>
         <Typography className={classes.title} color='textSecondary' gutterBottom>
-          anda diberhentikan tanggal<br />
-          1 Februari 2021 (sebelum ciptaker)<br />
+          anda diberhentikan tanggal
+          1 Februari 2021 (sebelum ciptaker)
           pesangon anda bisa berjumlah
         </Typography>
         { salary > 0 && (
@@ -66,7 +66,6 @@ function SeveranceWhatIf(props: SeveranceDescriptionProps) {
         </Typography>
         <Typography variant='body2' component='p' className={classes.workDurationDesc}>
           Dengan rincian
-          <br />
           uang pesangon sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>
@@ -74,7 +73,6 @@ function SeveranceWhatIf(props: SeveranceDescriptionProps) {
         </Typography>
         <Typography variant='body2' component='p' className={classes.workDurationDesc}>
           Dan uang penghargaan
-          <br />
           masa kerja sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>
