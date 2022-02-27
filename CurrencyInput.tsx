@@ -1,19 +1,19 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
 
-interface NumberFormatCustomProps {
-  inputRef: (instance: NumberFormat | null) => void;
+export interface NumberFormatCustomProps<T> {
+  inputRef: (instance: NumberFormat<T> | null) => void;
   onChange: (event: { target: { name: string; value: string } }) => void;
   name: string;
 }
 
-function CurrencyInput(props: NumberFormatCustomProps) {
-  const { inputRef, onChange, ...other } = props;
+const CurrencyInput = React.forwardRef(function NumberFormatCustom<T>(props: NumberFormatCustomProps<T>, ref) {
+  const { onChange, ...other } = props;
 
   return (
     <NumberFormat
       {...other}
-      getInputRef={inputRef}
+      getInputRef={ref}
       onValueChange={(values) => {
         onChange({
           target: {
@@ -27,6 +27,6 @@ function CurrencyInput(props: NumberFormatCustomProps) {
       prefix='Rp '
     />
   );
-}
+});
 
 export default CurrencyInput;

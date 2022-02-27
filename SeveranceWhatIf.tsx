@@ -1,57 +1,80 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { calculateSeveranceData, WORK_WEEKS_IN_A_YEAR, getWorkingDurationMilis, WORK_MILIS_IN_A_YEAR, SeveranceFormData, SeveranceData } from './severanceUtils';
+import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import {
+  calculateSeveranceData,
+  WORK_WEEKS_IN_A_YEAR,
+  getWorkingDurationMilis,
+  WORK_MILIS_IN_A_YEAR,
+  SeveranceFormData,
+  SeveranceData,
+} from './severanceUtils';
 import { SeveranceDescriptionProps } from './SeveranceDescription';
-import { makeStyles } from '@material-ui/core/styles';
+const PREFIX = 'SeveranceWhatIf';
 
-const useStyles = makeStyles(() => ({
-  container: {
+const classes = {
+  container: `${PREFIX}-container`,
+  title: `${PREFIX}-title`,
+  paper: `${PREFIX}-paper`,
+  workDurationDesc: `${PREFIX}-workDurationDesc`,
+};
+
+const StyledCard = styled(Card)(() => ({
+  [`&.${classes.container}`]: {
     marginTop: 14,
     width: '100%',
   },
-  title: {
+
+  [`& .${classes.title}`]: {
     fontSize: 14,
   },
-  paper: {
+
+  [`& .${classes.paper}`]: {
     padding: 5,
     margin: 7,
   },
-  workDurationDesc: {
+
+  [`& .${classes.workDurationDesc}`]: {
     marginTop: 12,
   },
 }));
 
 function SeveranceWhatIf(props: SeveranceDescriptionProps) {
-  const classes = useStyles();
   const stopWorkDate = new Date('2021-02-01');
   const severanceFormData: SeveranceFormData = {
     ...props.severanceFormData,
     stopWorkDate,
   };
-  const severanceData: SeveranceData = calculateSeveranceData(severanceFormData);
+  const severanceData: SeveranceData =
+    calculateSeveranceData(severanceFormData);
   const { salary } = severanceFormData;
-  const baseMultiplier = severanceData.baseMultiplier * (severanceFormData.specialReason ? severanceData.effectiveLaw.specialMultiplier : 1);
+  const baseMultiplier =
+    severanceData.baseMultiplier *
+    (severanceFormData.specialReason
+      ? severanceData.effectiveLaw.specialMultiplier
+      : 1);
   const severanceMultiplier = baseMultiplier + severanceData.rewardMultiplier;
   const severance = severanceMultiplier * salary;
-  const workDurationYear = (getWorkingDurationMilis(severanceFormData) / WORK_MILIS_IN_A_YEAR).toLocaleString('id-ID', { maximumFractionDigits: 1 });
+  const workDurationYear = (
+    getWorkingDurationMilis(severanceFormData) / WORK_MILIS_IN_A_YEAR
+  ).toLocaleString('id-ID', { maximumFractionDigits: 1 });
   return (
-    <Card
-      className={classes.container}
-    >
+    <StyledCard className={classes.container}>
       <CardContent>
-        <Typography variant='h3'>
-          Kalau
+        <Typography variant='h3'>Kalau</Typography>
+        <Typography
+          className={classes.title}
+          color='textSecondary'
+          gutterBottom
+        >
+          anda diberhentikan tanggal 1 Februari 2021 (sebelum ciptaker) pesangon
+          anda bisa berjumlah
         </Typography>
-        <Typography className={classes.title} color='textSecondary' gutterBottom>
-          anda diberhentikan tanggal
-          1 Februari 2021 (sebelum ciptaker)
-          pesangon anda bisa berjumlah
-        </Typography>
-        { salary > 0 && (
+        {salary > 0 && (
           <>
             <Typography variant='h5' component='h2'>
               {salary > 0 ? 'Rp ' + severance.toLocaleString() : ''}
@@ -64,25 +87,29 @@ function SeveranceWhatIf(props: SeveranceDescriptionProps) {
         <Typography variant='h5'>
           {severanceMultiplier + 'x upah bulanan'}
         </Typography>
-        <Typography variant='body2' component='p' className={classes.workDurationDesc}>
-          Dengan rincian
-          uang pesangon sebesar
+        <Typography
+          variant='body2'
+          component='p'
+          className={classes.workDurationDesc}
+        >
+          Dengan rincian uang pesangon sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>
           {baseMultiplier + 'x upah bulanan'}
         </Typography>
-        <Typography variant='body2' component='p' className={classes.workDurationDesc}>
-          Dan uang penghargaan
-          masa kerja sebesar
+        <Typography
+          variant='body2'
+          component='p'
+          className={classes.workDurationDesc}
+        >
+          Dan uang penghargaan masa kerja sebesar
         </Typography>
         <Typography variant='h6' color='textSecondary'>
           {severanceData.rewardMultiplier + 'x upah bulanan'}
         </Typography>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 }
 
 export default SeveranceWhatIf;
-
-  

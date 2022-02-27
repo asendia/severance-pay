@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Link from '@material-ui/core/Link';
-import Checkbox from '@material-ui/core/Checkbox';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Link from '@mui/material/Link';
+import Checkbox from '@mui/material/Checkbox';
 import CurrencyInput from './CurrencyInput';
 import SeveranceDescription from './SeveranceDescription';
 import SeveranceWhatIf from './SeveranceWhatIf';
@@ -21,36 +21,48 @@ import {
   SeveranceFormData,
   SeveranceData,
 } from './severanceUtils';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    'input::-webkit-date-and-time-value': {
-      textAlign: 'left',
-    },
+const PREFIX = 'Form';
+
+const classes = {
+  form: `${PREFIX}-form`,
+  content: `${PREFIX}-content`,
+  textField: `${PREFIX}-textField`,
+  checkboxContainer: `${PREFIX}-checkboxContainer`,
+  submitButton: `${PREFIX}-submitButton`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(() => ({
+  'input::-webkit-date-and-time-value': {
+    textAlign: 'left',
   },
-  form: {
+  [`& .${classes.form}`]: {
     width: '100%',
   },
-  content: {
+
+  [`& .${classes.content}`]: {
     display: 'flex',
     flexDirection: 'column',
   },
-  textField: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+
+  [`& .${classes.textField}`]: {
+    marginTop: '8px',
+    marginBottom: '8px',
   },
-  checkboxContainer: {
+
+  [`& .${classes.checkboxContainer}`]: {
     marginBottom: 8,
   },
-  submitButton: {
-    marginTop: theme.spacing(3),
+
+  [`& .${classes.submitButton}`]: {
+    marginTop: '20px',
   },
 }));
 
 function Form() {
-  const classes = useStyles();
   const [severanceFormData, setSeveranceFormData] = useState<SeveranceFormData>(
     {
       startWorkDate: getDateAddYear(-2),
@@ -102,7 +114,7 @@ function Form() {
   const isValidStartWorkDate = isValidDate(stringToDate(startWorkDate));
   const isValidStopWorkDate = isValidDate(stringToDate(stopWorkDate));
   return (
-    <>
+    <Root>
       <form onSubmit={handleFormSubmit} className={classes.form}>
         <Card>
           <CardContent className={classes.content}>
@@ -110,6 +122,7 @@ function Form() {
               id='startWorkingDate'
               label='Tanggal Bergabung'
               type='date'
+              variant='standard'
               value={startWorkDate}
               className={classes.textField}
               InputLabelProps={{
@@ -123,6 +136,7 @@ function Form() {
               id='stopWorkingDate'
               label='Tanggal Diberhentikan'
               type='date'
+              variant='standard'
               value={stopWorkDate}
               className={classes.textField}
               InputLabelProps={{
@@ -144,7 +158,7 @@ function Form() {
                 }
                 label='Alasan khusus'
               />
-              <FormHelperText style={{ marginTop: '-7px' }}>
+              <FormHelperText style={{ marginTop: '-7px', marginLeft: '0' }}>
                 <Link href='/pesangon/special-case.html' target='blank'>
                   Apa itu alasan khusus?
                 </Link>
@@ -152,10 +166,12 @@ function Form() {
             </FormControl>
             <TextField
               label='Upah Bulanan'
+              InputLabelProps={{ shrink: true }}
               value={salary.toString()}
               onChange={handleSalaryChange}
               name='baseSalary'
               id='baseSalary'
+              variant='standard'
               className={classes.textField}
               InputProps={{
                 inputComponent: CurrencyInput as any,
@@ -182,7 +198,7 @@ function Form() {
           severanceFormData={severanceFormData}
         />
       )}
-    </>
+    </Root>
   );
 }
 

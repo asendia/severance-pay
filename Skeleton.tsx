@@ -1,20 +1,30 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { Link } from '@material-ui/core';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
+const PREFIX = 'Skeleton';
+
+const classes = {
+  root: `${PREFIX}-root`,
+  title: `${PREFIX}-title`,
+  text: `${PREFIX}-text`,
+  footer: `${PREFIX}-footer`,
+  footerCredit: `${PREFIX}-footer-credit`,
+};
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+  [`&.${classes.root}`]: {
     paddingBottom: 20,
-    width: 420,
     margin: 'auto',
-    [theme.breakpoints.down(450)]: {
-      width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '420px',
     },
   },
-  title: {
+
+  [`& .${classes.title}`]: {
     width: '100%',
     paddingTop: 7,
     paddingBottom: 7,
@@ -22,39 +32,47 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 14,
     boxSizing: 'content-box',
   },
-  text: {
+
+  [`& .${classes.text}`]: {
     marginLeft: 14,
   },
-  footer: {
+
+  [`& .${classes.footer}`]: {
     margin: 14,
     textAlign: 'center',
   },
+  [`& .${classes.footerCredit}`]: {
+    marginTop: 10,
+  }
 }));
 
 function Skeleton(props) {
-  const classes = useStyles();
   return (
-    <>
-      <Grid
-        className={classes.root}
-        container
-        direction='column'
-        justify='center'
-        alignItems='center'
-      >
-        <Paper className={classes.title}>
-          <Typography variant='h5' component='h1' className={classes.text}>
-            Kalkulator Pesangon
-          </Typography>
-        </Paper>
-        {props.children}
-        <Typography variant='caption' component='p' className={classes.footer}>
-          Aplikasi ini mungkin tidak akurat dan tidak diperuntukan sebagai anjuran hukum<br />
-          2021 - warisin - <Link href='https://github.com/asendia/severance-pay'>source code</Link>
+    <StyledGrid
+      className={classes.root}
+      container
+      direction='column'
+      justifyContent='center'
+      alignItems='center'
+    >
+      <Paper className={classes.title}>
+        <Typography variant='h5' component='h1' className={classes.text}>
+          Kalkulator Pesangon
         </Typography>
-      </Grid>
-    </>
-  )
+      </Paper>
+      {props.children}
+      <Typography variant='caption' component='p' className={classes.footer}>
+        Aplikasi ini mungkin tidak akurat dan tidak diperuntukan sebagai anjuran
+        hukum
+        <div className={classes.footerCredit}>
+          2021 - warisin -{' '}
+          <Link href='https://github.com/asendia/severance-pay'>
+            source code
+          </Link>
+        </div>
+      </Typography>
+    </StyledGrid>
+  );
 }
 
 export default Skeleton;
