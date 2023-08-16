@@ -63,6 +63,8 @@ function SeveranceWhatIf(props: SeveranceDescriptionProps) {
     getWorkingDurationMilis(severanceFormData) / WORK_MILIS_IN_A_YEAR
   ).toLocaleString('id-ID', { maximumFractionDigits: 1 });
   return (
+    severance < 0 ?
+    <></> :
     <StyledCard className={classes.container}>
       <CardContent>
         <Typography variant='h3'>Kalau</Typography>
